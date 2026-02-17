@@ -1,5 +1,6 @@
 {
-  "name": "copia original RS Eventos - Horários",
-  "description": "Plataforma profissional para organização de horários, equipes e gestão de diaristas para empresas de eventos.",
+  "name": "RS Eventos - Horários Prof",
+  "description": "Sistema PWA completo para gestão de eventos, escalas e colaboradores. Compatível com GitHub Pages e suporte Offline.",
+  "version": "1.2.1",
   "requestFramePermissions": []
 }

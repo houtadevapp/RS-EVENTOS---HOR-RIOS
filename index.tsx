@@ -8,11 +8,11 @@ if (!rootElement) {
   throw new Error("Could not find root element to mount to");
 }
 
-// Registro simplificado de Service Worker para otimização PWA (Offline/Cache)
+// Registro corrigido com caminho relativo para funcionar em qualquer servidor
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(err => {
-      console.log('ServiceWorker registration ignored in development or not supported');
+    navigator.serviceWorker.register('./sw.js').catch(err => {
+      console.log('ServiceWorker registration failed or not supported in this environment');
     });
   });
 }

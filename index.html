@@ -4,9 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#09090b">
+    <meta name="theme-color" content="#10b981">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="RS Eventos - Gestão Profissional de Escalas e Equipes">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RS EVENTOS - HORÁRIOS">
+    <meta property="og:description" content="Plataforma de gestão de diaristas e escalas para eventos.">
+    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/512/1033/1033958.png">
+
     <title>RS EVENTOS - HORÁRIOS</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,195 +22,50 @@
         body {
             font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
-            background-color: #09090b; /* zinc-950 */
+            background-color: #09090b;
             transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        /* Hide scrollbars for a more mobile-app feel */
-        ::-webkit-scrollbar {
-            display: none;
-        }
-        input, select, button {
-            font-size: 1.1rem !important;
+            overflow-x: hidden;
         }
 
-        /* Efeito de Rompimento (Shatter) */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
+        
+        input, select, button { font-size: 1rem !important; }
+
+        /* Estilo da logo quebrada no erro de login */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
             20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
-
-        .shatter-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .shatter-active {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-        }
-
-        .shatter-part {
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-        }
-
-        .shatter-active .shatter-top {
-            transform: translate(-10px, -15px) rotate(-5deg);
-            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 65%);
-            filter: drop-shadow(0 0 5px #ef4444);
-            color: #ef4444; /* Muda para vermelho no erro */
-        }
-
-        .shatter-active .shatter-bottom {
-            transform: translate(10px, 15px) rotate(5deg);
-            clip-path: polygon(0 65%, 100% 45%, 100% 100%, 0 100%);
-            filter: drop-shadow(0 0 5px #ef4444);
-            color: #ef4444;
-        }
-
-        .shatter-active .logo-box {
-            border-color: #ef4444 !important;
-            background-color: rgba(239, 68, 68, 0.05);
-        }
+        .shatter-container { position: relative; display: inline-block; }
+        .shatter-active { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        .shatter-part { transition: transform 0.3s ease-out, opacity 0.3s ease-out; position: absolute; }
+        .shatter-active .shatter-top { transform: translate(-8px, -12px) rotate(-8deg); clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); color: #ef4444; }
+        .shatter-active .shatter-bottom { transform: translate(8px, 12px) rotate(8deg); clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%); color: #ef4444; }
 
         /* Fundo Animado */
-        .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at 50% 50%, #10b98122 0%, #09090b 100%);
-            overflow: hidden;
-        }
+        .animated-bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 50%, #10b98115 0%, #09090b 100%); overflow: hidden; }
+        .blob { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle at center, #10b98108 0%, transparent 70%); border-radius: 50%; filter: blur(80px); animation: move 30s infinite alternate ease-in-out; }
+        .blob-1 { top: -200px; left: -200px; }
+        .blob-2 { bottom: -200px; right: -200px; animation-delay: -5s; }
+        @keyframes move { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(150px, 100px) scale(1.2); } }
 
-        .blob {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle at center, #10b98111 0%, transparent 70%);
-            border-radius: 50%;
-            filter: blur(80px);
-            animation: move 25s infinite alternate ease-in-out;
-        }
+        /* Animações de Transição */
+        @keyframes portalExpand { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(5); opacity: 0; } }
+        .portal-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; pointer-events: none; overflow: hidden; background: transparent; }
+        .portal-circle { width: 100vmax; height: 100vmax; border: 100px solid #10b981; border-radius: 50%; animation: portalExpand 1s cubic-bezier(0.7, 0, 0.3, 1) forwards; }
+        .portal-rs { position: absolute; font-size: 12rem; font-weight: 900; color: #10b981; opacity: 0; animation: textFade 0.8s ease-out forwards; z-index: 10000; letter-spacing: -0.05em; }
+        @keyframes textFade { 0% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; } 100% { opacity: 0; transform: scale(1.5); } }
 
-        .blob-1 { top: -100px; left: -100px; animation-delay: 0s; }
-        .blob-2 { bottom: -100px; right: -100px; animation-delay: -5s; width: 600px; height: 600px; background: radial-gradient(circle at center, #10b98109 0%, transparent 70%); }
-        .blob-3 { top: 40%; left: 30%; animation-delay: -10s; width: 400px; height: 400px; animation-duration: 30s; }
+        .main-app-reveal { animation: mainReveal 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        @keyframes mainReveal { 0% { transform: translateY(20px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
 
-        @keyframes move {
-            0% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(100px, 50px) scale(1.1); }
-            66% { transform: translate(-50px, 100px) scale(0.9); }
-            100% { transform: translate(50px, -50px) scale(1); }
-        }
-
-        /* Animação de Transição de Login */
-        @keyframes portalExpand {
-            0% { transform: scale(0); opacity: 1; border-width: 0px; }
-            40% { transform: scale(1); opacity: 1; border-width: 80px; }
-            100% { transform: scale(4); opacity: 0; border-width: 0px; }
-        }
-
-        @keyframes rsFloat {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
-
-        .portal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .portal-circle {
-            width: 100vmax;
-            height: 100vmax;
-            border-style: solid;
-            border-color: #10b981;
-            border-radius: 50%;
-            animation: portalExpand 1.2s cubic-bezier(0.7, 0, 0.3, 1) forwards;
-            box-shadow: 0 0 100px #10b981, inset 0 0 100px #10b981;
-        }
-
-        .portal-rs {
-            position: absolute;
-            font-size: 8rem;
-            font-weight: 900;
-            color: white;
-            letter-spacing: -0.1em;
-            animation: rsFloat 1.2s ease-out forwards;
-            text-shadow: 0 0 20px #10b981;
-            z-index: 10000;
-        }
-
-        .main-app-reveal {
-            animation: mainReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-        }
-
-        @keyframes mainReveal {
-            0% { transform: scale(0.95); opacity: 0; filter: blur(10px); }
-            100% { transform: scale(1); opacity: 1; filter: blur(0); }
-        }
-
-        /* --- TEMA CLARO OVERRIDES --- */
-        .light-theme {
-            background-color: #f8fafc !important; /* slate-50 */
-            color: #0f172a !important; /* slate-900 */
-        }
-
+        .light-theme { background-color: #f8fafc !important; color: #0f172a !important; }
         .light-theme .bg-zinc-950 { background-color: #f8fafc !important; }
         .light-theme .bg-zinc-900 { background-color: #ffffff !important; border-color: #e2e8f0 !important; }
-        .light-theme .bg-zinc-800 { background-color: #f1f5f9 !important; border-color: #e2e8f0 !important; }
-        .light-theme .bg-zinc-900\/60 { background-color: rgba(255, 255, 255, 0.8) !important; }
-        .light-theme .bg-zinc-900\/50 { background-color: rgba(255, 255, 255, 0.7) !important; }
-        .light-theme .bg-zinc-800\/80 { background-color: rgba(241, 245, 249, 0.9) !important; }
-        .light-theme .bg-zinc-800\/50 { background-color: rgba(241, 245, 249, 0.6) !important; }
-        .light-theme .bg-zinc-800\/40 { background-color: rgba(241, 245, 249, 0.5) !important; }
-        .light-theme .bg-zinc-800\/30 { background-color: rgba(241, 245, 249, 0.4) !important; }
-        .light-theme .bg-emerald-500\/10 { background-color: rgba(16, 185, 129, 0.1) !important; }
-
         .light-theme .text-white { color: #0f172a !important; }
-        .light-theme .text-zinc-100 { color: #1e293b !important; }
-        .light-theme .text-zinc-300 { color: #334155 !important; }
-        .light-theme .text-zinc-400 { color: #64748b !important; }
-        .light-theme .text-zinc-500 { color: #94a3b8 !important; }
-        .light-theme .text-zinc-600 { color: #cbd5e1 !important; }
-
-        .light-theme .border-zinc-800 { border-color: #e2e8f0 !important; }
-        .light-theme .border-zinc-700 { border-color: #cbd5e1 !important; }
-        .light-theme .border-zinc-700\/50 { border-color: rgba(203, 213, 225, 0.5) !important; }
-        .light-theme .border-emerald-600\/30 { border-color: rgba(16, 185, 129, 0.3) !important; }
-        .light-theme .border-emerald-500\/20 { border-color: rgba(16, 185, 129, 0.2) !important; }
-
-        .light-theme header { background-color: #ffffff !important; border-bottom: 1px solid #e2e8f0 !important; }
-        .light-theme nav { background-color: #ffffff !important; border-top: 1px solid #e2e8f0 !important; }
-        .light-theme .shadow-xl { shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02) !important; }
-        
-        .light-theme .animated-bg {
-            background: radial-gradient(circle at 50% 50%, #10b98111 0%, #f8fafc 100%);
-        }
-        .light-theme .blob {
-            background: radial-gradient(circle at center, #10b98108 0%, transparent 70%);
-        }
-
-        .light-theme input, .light-theme select, .light-theme textarea {
-            color: #0f172a !important;
-        }
-        .light-theme input::placeholder {
-            color: #94a3b8 !important;
-        }
-
-        /* Botão FAB e Modais no Light Theme */
-        .light-theme .bg-zinc-900\/90 { background-color: rgba(255, 255, 255, 0.95) !important; }
-        .light-theme .fixed.inset-0.bg-black\/90 { background-color: rgba(15, 23, 42, 0.8) !important; backdrop-filter: blur(8px); }
-
     </style>
 <script type="importmap">
 {

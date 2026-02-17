@@ -34,35 +34,20 @@ const App: React.FC = () => {
     
     const totalMissing = missingFixos.length + missingDiaristas.length;
 
-    if (totalMissing === 0) {
-      const filtered = db.notificacoes.filter(n => n.id !== summaryId);
-      if (filtered.length !== db.notificacoes.length) {
-        db.notificacoes = filtered;
-        saveDB(db);
-      }
-      return;
-    }
+    if (totalMissing === 0) return;
 
     const nomesFixos = missingFixos.map(p => p.nome).join(', ');
     const nomesDiaristas = missingDiaristas.map(p => p.nome).join(', ');
 
-    const novaMensagem = `Pendências de hoje (${new Date().toLocaleDateString('pt-BR')}):
-• FIXOS SEM ESCALA (${missingFixos.length}): ${nomesFixos || 'Nenhum'}
-• DIARISTAS SEM ESCALA (${missingDiaristas.length}): ${nomesDiaristas || 'Nenhum'}`;
+    const novaMensagem = `Pendências de hoje:\n• FIXOS SEM ESCALA (${missingFixos.length}): ${nomesFixos || 'Nenhum'}\n• DIARISTAS SEM ESCALA (${missingDiaristas.length}): ${nomesDiaristas || 'Nenhum'}`;
 
     const existingIndex = db.notificacoes.findIndex(n => n.id === summaryId);
     
-    if (existingIndex !== -1) {
-      if (db.notificacoes[existingIndex].mensagem !== novaMensagem) {
-        db.notificacoes[existingIndex].mensagem = novaMensagem;
-        db.notificacoes[existingIndex].lida = false;
-        saveDB(db);
-      }
-    } else {
+    if (existingIndex === -1) {
       const notif: Notificacao = {
         id: summaryId,
         tipo_role: UserRole.ADMIN,
-        titulo: '📢 RESUMO DIÁRIO DE ALOCAÇÃO',
+        titulo: '📢 RESUMO DE ALOCAÇÃO',
         mensagem: novaMensagem,
         data: new Date().toISOString(),
         lida: false
@@ -71,14 +56,7 @@ const App: React.FC = () => {
       saveDB(db);
       
       if ("Notification" in window && Notification.permission === "granted") {
-        try {
-          new Notification("RS Eventos - Resumo Diário", { 
-            body: `Existem ${totalMissing} colaboradores sem escala hoje.`,
-            icon: 'https://cdn-icons-png.flaticon.com/512/1033/1033958.png'
-          });
-        } catch (e) {
-          console.error("Erro ao disparar notificação nativa", e);
-        }
+        new Notification("RS Eventos", { body: `Há ${totalMissing} colaboradores sem escala.` });
       }
     }
   }, []);
@@ -89,44 +67,19 @@ const App: React.FC = () => {
       setCurrentUser(db.currentUser);
       checkDailySummary(db.currentUser);
     }
-
-    const handleDBUpdate = () => {
-      const currentDb = getDB();
-      if (currentDb.currentUser) {
-        checkDailySummary(currentDb.currentUser);
-      }
-    };
-
-    window.addEventListener('dbUpdated', handleDBUpdate);
-
-    if ("Notification" in window && Notification.permission === "default") {
-      Notification.requestPermission();
-    }
-
     setIsLoading(false);
-
-    return () => {
-      window.removeEventListener('dbUpdated', handleDBUpdate);
-    };
   }, [checkDailySummary]);
 
   const handleLogin = (user: User) => {
-    // Inicia a animação de transição
     setIsTransitioning(true);
-
-    // Pequeno atraso para o clímax da animação antes de trocar o estado
     setTimeout(() => {
       const db = getDB();
       db.currentUser = user;
       saveDB(db);
       setCurrentUser(user);
       checkDailySummary(user);
-
-      // Finaliza a transição após o dashboard ser revelado
-      setTimeout(() => {
-        setIsTransitioning(false);
-      }, 1000);
-    }, 600);
+      setTimeout(() => setIsTransitioning(false), 800);
+    }, 400);
   };
 
   const handleLogout = () => {
@@ -139,14 +92,13 @@ const App: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
     <>
-      {/* Camada de Transição Criativa */}
       {isTransitioning && (
         <div className="portal-overlay">
           <div className="portal-circle"></div>
@@ -157,7 +109,7 @@ const App: React.FC = () => {
       {!currentUser ? (
         <Login onLogin={handleLogin} />
       ) : (
-        <div className={isTransitioning ? "main-app-reveal" : ""}>
+        <div className={isTransitioning ? "opacity-0" : "main-app-reveal"}>
           <Layout 
             activeTab={activeTab} 
             setActiveTab={setActiveTab} 
