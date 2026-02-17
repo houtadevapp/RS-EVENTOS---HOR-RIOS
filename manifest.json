@@ -1,0 +1,18 @@
+
+{
+  "name": "RS Eventos - Horários",
+  "short_name": "RS Eventos",
+  "description": "Gestão Profissional de Escalas e Equipes para Eventos.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1033/1033958.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
